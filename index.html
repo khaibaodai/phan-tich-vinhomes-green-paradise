@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân Tích Chuyên Sâu: Siêu Dự Án Vinhomes Green Paradise Cần Giờ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Nature -->
+    <!-- Application Structure Plan: Tôi đã thiết kế ứng dụng này theo cấu trúc dashboard theo chủ đề, thay vì một báo cáo tuyến tính. Cách tiếp cận này cho phép người dùng tự do khám phá các khía cạnh họ quan tâm nhất. Luồng tương tác bắt đầu từ tổng quan cấp cao, sau đó đi sâu vào các chi tiết cụ thể như quy mô, tiện ích và phân tích tác động đa chiều (kinh tế, xã hội, môi trường). Cấu trúc này tối ưu hóa khả năng tiếp cận thông tin và khuyến khích sự tương tác, giúp người dùng xây dựng một hiểu biết toàn diện về dự án một cách trực quan và hiệu quả. -->
+    <!-- Visualization & Content Choices: 1. Tổng quan: Dùng thẻ thông tin để cung cấp số liệu nhanh. Mục tiêu: Thông tin nhanh. 2. Quy mô & Vốn: Biểu đồ Donut (Chart.js) cho phân bổ đất và Biểu đồ Cột (Chart.js) để so sánh vốn đầu tư. Mục tiêu: So sánh tỷ lệ và độ lớn. 3. Tiện ích: Sơ đồ lưới tương tác (HTML/CSS/JS) để trình bày các phân khu. Mục tiêu: Tổ chức thông tin không gian. 4. Tác động: Giao diện tab và Biểu đồ Radar (Chart.js) để phân tích đa chiều (SWOT). Mục tiêu: Phân tích và so sánh các yếu tố phức tạp. Các lựa chọn này đều dùng Canvas và JS để đảm bảo tính tương tác cao và tuân thủ yêu cầu kỹ thuật. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #FDFBF8;
+            color: #3D405B;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #36755E;
+            border-bottom-color: #36755E;
+        }
+        .tab-button.active, .deep-analysis-tab-button.active {
+            background-color: #36755E;
+            color: #FFFFFF;
+        }
+        .zone.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(54, 117, 94, 0.7);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4">
+            <nav class="flex justify-between items-center py-4">
+                <h1 class="text-xl md:text-2xl font-bold text-[#36755E] flex-shrink-0">Vinhomes Cần Giờ</h1>
+                <div class="hidden md:flex flex-wrap items-center justify-end space-x-6">
+                    <a href="#tong-quan" class="nav-link font-medium pb-1">Tổng Quan</a>
+                    <a href="#quy-mo" class="nav-link font-medium pb-1">Quy Mô</a>
+                    <a href="#tien-ich" class="nav-link font-medium pb-1">Tiện Ích</a>
+                    <a href="#tac-dong" class="nav-link font-medium pb-1">Tác Động</a>
+                    <a href="#phan-tich-sau" class="nav-link font-medium pb-1">Phân Tích Sâu</a>
+                    <a href="#ha-tang" class="nav-link font-medium pb-1">Hạ Tầng</a>
+                    <a href="#rui-ro" class="nav-link font-medium pb-1">Rủi Ro</a>
+                    <a href="#tien-do" class="nav-link font-medium pb-1">Tiến Độ</a>
+                </div>
+                <div class="md:hidden">
+                    <select id="mobile-nav" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#36755E] focus:border-[#36755E] block w-full p-2.5">
+                        <option value="#tong-quan">Tổng Quan</option>
+                        <option value="#quy-mo">Quy Mô</option>
+                        <option value="#tien-ich">Tiện Ích</option>
+                        <option value="#tac-dong">Tác Động</option>
+                        <option value="#phan-tich-sau">Phân Tích Sâu</option>
+                        <option value="#ha-tang">Hạ Tầng</option>
+                        <option value="#rui-ro">Rủi Ro</option>
+                        <option value="#tien-do">Tiến Độ</option>
+                    </select>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="relative text-center py-20 md:py-32 bg-gradient-to-b from-emerald-50 to-white">
+            <div class="container mx-auto px-4 z-10">
+                <h2 class="text-4xl md:text-6xl font-extrabold text-[#36755E] mb-4">Vinhomes Green Paradise Cần Giờ</h2>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-600">Phân tích chuyên sâu về siêu dự án khu đô thị lấn biển mang tầm vóc quốc tế.</p>
+            </div>
+        </section>
+
+        <section id="tong-quan" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Tổng Quan Dự Án</h3>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Đây là những thông số cốt lõi định hình nên quy mô và tầm quan trọng của dự án, cung cấp một cái nhìn tổng thể về các yếu tố cơ bản trước khi đi vào phân tích chi tiết hơn.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-4xl text-[#36755E] mb-3">🌍</div>
+                        <h4 class="font-bold text-xl mb-1">Vị Trí</h4>
+                        <p class="text-gray-700">Xã Long Hòa & TT. Cần Thạnh, Huyện Cần Giờ, TP.HCM</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-4xl text-[#36755E] mb-3">🏢</div>
+                        <h4 class="font-bold text-xl mb-1">Chủ Đầu Tư</h4>
+                        <p class="text-gray-700">Tập đoàn Vingroup</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-4xl text-[#36755E] mb-3">🏞️</div>
+                        <h4 class="font-bold text-xl mb-1">Tổng Diện Tích</h4>
+                        <p class="text-gray-700">~ 2,870 ha</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-4xl text-[#36755E] mb-3">💰</div>
+                        <h4 class="font-bold text-xl mb-1">Vốn Đầu Tư</h4>
+                        <p class="text-gray-700">~ 217,000 tỷ VNĐ (~10 tỷ USD)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quy-mo" class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Quy Mô & Vốn Đầu Tư</h3>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Phần này trực quan hóa sự phân bổ diện tích và so sánh quy mô vốn đầu tư khổng lồ của dự án. Các biểu đồ giúp bạn dễ dàng cảm nhận được tầm vóc và cơ cấu sử dụng đất của khu đô thị.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h4 class="text-2xl font-semibold text-center mb-4">Phân Bổ Sử Dụng Đất (Dự kiến)</h4>
+                        <div class="chart-container">
+                            <canvas id="landUseChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-semibold text-center mb-4">So Sánh Vốn Đầu Tư</h4>
+                         <div class="chart-container" style="max-width: 600px; height: 350px;">
+                            <canvas id="investmentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tien-ich" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Tiện Ích & Phân Khu Chức Năng</h3>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Khám phá cơ cấu tổ chức của siêu đô thị. Hãy nhấp vào từng phân khu để xem chi tiết về các tiện ích và chức năng cốt lõi được quy hoạch, từ du lịch, nghỉ dưỡng đến công nghệ cao.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <div id="zones-container" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div class="zone bg-emerald-100 p-4 rounded-lg cursor-pointer transition-all duration-300 text-center" data-zone="a">
+                                <h5 class="font-bold">Phân khu A</h5><p class="text-sm">Du lịch, văn hóa, nghỉ dưỡng</p>
+                            </div>
+                            <div class="zone bg-teal-100 p-4 rounded-lg cursor-pointer transition-all duration-300 text-center" data-zone="b">
+                                <h5 class="font-bold">Phân khu B</h5><p class="text-sm">Nhà ở, đô thị, dịch vụ</p>
+                            </div>
+                            <div class="zone bg-cyan-100 p-4 rounded-lg cursor-pointer transition-all duration-300 text-center" data-zone="c">
+                                 <h5 class="font-bold">Phân khu C</h5><p class="text-sm">Trung tâm tài chính, kinh tế</p>
+                            </div>
+                            <div class="zone bg-sky-100 p-4 rounded-lg cursor-pointer transition-all duration-300 text-center" data-zone="d">
+                                 <h5 class="font-bold">Phân khu D</h5><p class="text-sm">Đô thị sáng tạo, công nghệ</p>
+                            </div>
+                            <div class="zone bg-indigo-100 p-4 rounded-lg cursor-pointer transition-all duration-300 text-center" data-zone="e">
+                                <h5 class="font-bold">Phân khu E</h5><p class="text-sm">Trung tâm giáo dục, y tế</p>
+                            </div>
+                             <div class="zone bg-fuchsia-100 p-4 rounded-lg cursor-pointer transition-all duration-300 text-center" data-zone="f">
+                                <h5 class="font-bold">Không gian Biển</h5><p class="text-sm">Bãi biển, công viên ven biển</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="zone-details" class="lg:col-span-1 bg-gray-50 p-6 rounded-lg shadow-inner min-h-[250px] flex flex-col justify-center">
+                        <h4 id="zone-title" class="text-2xl font-bold mb-2 text-gray-800">Chọn một phân khu</h4>
+                        <p id="zone-description" class="text-gray-700">Thông tin chi tiết về chức năng và các tiện ích nổi bật của phân khu được chọn sẽ hiển thị ở đây.</p>
+                        <ul id="zone-amenities" class="mt-4 list-disc list-inside text-gray-600 space-y-1"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tac-dong" class="py-16">
+            <div class="container mx-auto px-4">
+                 <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Phân Tích Tác Động Đa Chiều</h3>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Đây là phần phân tích cốt lõi, xem xét các tác động tiềm năng của dự án trên ba phương diện chính: Kinh tế, Xã hội và Môi trường. Sử dụng các tab để chuyển đổi và biểu đồ radar để có cái nhìn tổng hợp.</p>
+                </div>
+                <div class="flex justify-center mb-8">
+                    <div class="flex space-x-2 bg-gray-200 p-1 rounded-full">
+                        <button class="tab-button px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300 active" data-tab="kinh-te">Kinh tế</button>
+                        <button class="tab-button px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300" data-tab="xa-hoi">Xã hội</button>
+                        <button class="tab-button px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300" data-tab="moi-truong">Môi trường</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="tab-content active" id="kinh-te">
+                        <h4 class="text-2xl font-semibold mb-4 text-gray-800">Tác Động Kinh Tế</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <h5 class="font-bold text-green-700">Tích cực</h5>
+                                <ul class="list-disc list-inside text-gray-700 ml-4">
+                                    <li>Thúc đẩy tăng trưởng GDP cho TP.HCM và vùng kinh tế trọng điểm phía Nam.</li>
+                                    <li>Tạo ra hàng chục nghìn việc làm trong xây dựng, dịch vụ, du lịch.</li>
+                                    <li>Thu hút mạnh mẽ vốn đầu tư trong và ngoài nước (FDI).</li>
+                                    <li>Phát triển Cần Giờ thành trung tâm du lịch, tài chính quốc tế.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-red-700">Thách thức</h5>
+                                <ul class="list-disc list-inside text-gray-700 ml-4">
+                                    <li>Áp lực khổng lồ lên hạ tầng giao thông kết nối.</li>
+                                    <li>Rủi ro bong bóng bất động sản và đầu cơ.</li>
+                                    <li>Yêu cầu nguồn vốn đầu tư khổng lồ và bền vững trong dài hạn.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content hidden" id="xa-hoi">
+                        <h4 class="text-2xl font-semibold mb-4 text-gray-800">Tác Động Xã Hội</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <h5 class="font-bold text-green-700">Tích cực</h5>
+                                <ul class="list-disc list-inside text-gray-700 ml-4">
+                                    <li>Hình thành một khu đô thị hiện đại, đáng sống, thu hút dân cư chất lượng cao.</li>
+                                    <li>Cải thiện chất lượng sống và dịch vụ công cộng cho người dân địa phương.</li>
+                                    <li>Thúc đẩy chuyển dịch cơ cấu lao động từ nông nghiệp sang dịch vụ.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-red-700">Thách thức</h5>
+                                <ul class="list-disc list-inside text-gray-700 ml-4">
+                                    <li>Nguy cơ thay đổi lớn về văn hóa, lối sống bản địa.</li>
+                                    <li>Vấn đề tái định cư và sinh kế cho người dân bị ảnh hưởng.</li>
+                                    <li>Có thể gia tăng khoảng cách giàu nghèo và phân hóa xã hội.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content hidden" id="moi-truong">
+                        <h4 class="text-2xl font-semibold mb-4 text-gray-800">Tác Động Môi Trường</h4>
+                        <div class="space-y-4">
+                             <div>
+                                <h5 class="font-bold text-green-700">Cam kết & Cơ hội</h5>
+                                <ul class="list-disc list-inside text-gray-700 ml-4">
+                                    <li>Áp dụng các công nghệ xanh, năng lượng tái tạo và quản lý đô thị thông minh.</li>
+                                    <li>Cơ hội để thiết lập một mô hình phát triển đô thị bền vững.</li>
+                                    <li>Tăng cường nhận thức về bảo vệ môi trường và hệ sinh thái ngập mặn.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-red-700">Rủi ro & Thách thức</h5>
+                                <ul class="list-disc list-inside text-gray-700 ml-4">
+                                    <li>Tác động không thể tránh khỏi đến Khu dự trữ sinh quyển rừng ngập mặn Cần Giờ.</li>
+                                    <li>Thay đổi dòng chảy, thủy văn và hệ sinh thái ven bờ.</li>
+                                    <li>Rủi ro về xói lở, sụt lún và ô nhiễm trong quá trình xây dựng và vận hành.</li>
+                                    <li>Áp lực lớn từ mật độ dân số và hoạt động du lịch lên môi trường tự nhiên.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                     <div>
+                        <h4 class="text-2xl font-semibold text-center mb-4">Phân Tích Tổng Hợp (SWOT)</h4>
+                        <div class="chart-container">
+                            <canvas id="swotChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="phan-tich-sau" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Phân Tích Chuyên Sâu & So Sánh</h3>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Đi sâu vào các khía cạnh chuyên môn như hiệu quả tài chính, so sánh với các dự án quốc tế và nền tảng pháp lý, cung cấp một góc nhìn đa chiều và chuyên nghiệp hơn về dự án.</p>
+                </div>
+                <div class="flex justify-center mb-8">
+                    <div class="flex flex-wrap justify-center gap-2 bg-gray-200 p-1 rounded-full">
+                        <button class="deep-analysis-tab-button px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300 active" data-tab="dau-tu">Hiệu quả Đầu tư</button>
+                        <button class="deep-analysis-tab-button px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300" data-tab="so-sanh">So sánh Quốc tế</button>
+                        <button class="deep-analysis-tab-button px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300" data-tab="phap-ly">Khung Pháp lý</button>
+                    </div>
+                </div>
+                <div class="deep-analysis-tab-content active" id="dau-tu">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <h4 class="text-2xl font-semibold mb-4 text-gray-800">Phân Tích Tài Chính</h4>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li><strong>Cơ cấu vốn (Dự kiến):</strong> Phân bổ giữa vốn chủ sở hữu và vốn vay để tối ưu hóa hiệu quả.</li>
+                                <li><strong>Tỷ suất Hoàn vốn Nội bộ (IRR):</strong> Ước tính mức sinh lời tiềm năng, một chỉ số quan trọng cho nhà đầu tư.</li>
+                                <li><strong>Thời gian Hoàn vốn:</strong> Dự báo khoảng thời gian cần thiết để thu hồi vốn đầu tư ban đầu.</li>
+                                <li><strong>Dòng tiền (Cash Flow):</strong> Phân tích dự phóng dòng tiền ra vào trong suốt vòng đời dự án.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-semibold text-center mb-4">Cơ Cấu Vốn Đầu Tư (Ước tính)</h4>
+                            <div class="chart-container" style="max-width: 400px; height: 300px;">
+                                <canvas id="capitalStructureChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="deep-analysis-tab-content hidden" id="so-sanh">
+                     <h4 class="text-2xl font-semibold mb-4 text-center text-gray-800">So Sánh Với Các Siêu Đô Thị Biển</h4>
+                     <div class="overflow-x-auto">
+                        <table class="w-full min-w-[600px] text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 font-bold uppercase text-gray-600 border border-gray-300">Tiêu chí</th>
+                                    <th class="p-3 font-bold uppercase text-gray-600 border border-gray-300 text-center bg-emerald-100">Vinhomes Cần Giờ</th>
+                                    <th class="p-3 font-bold uppercase text-gray-600 border border-gray-300 text-center">The Palm Jumeirah (Dubai)</th>
+                                    <th class="p-3 font-bold uppercase text-gray-600 border border-gray-300 text-center">Marina Bay (Singapore)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-3 text-gray-800 border border-gray-300 font-semibold">Diện tích</td>
+                                    <td class="p-3 text-gray-700 border border-gray-300 text-center">~2,870 ha</td>
+                                    <td class="p-3 text-gray-700 border border-gray-300 text-center">~560 ha</td>
+                                    <td class="p-3 text-gray-700 border border-gray-300 text-center">~360 ha</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-3 text-gray-800 border border-gray-300 font-semibold">Mục tiêu chính</td>
+                                    <td class="p-3 text-gray-700 border border-gray-300">Đô thị sinh thái, du lịch, tài chính</td>
+                                    <td class="p-3 text-gray-700 border border-gray-300">Du lịch, nghỉ dưỡng siêu sang</td>
+                                    <td class="p-3 text-gray-700 border border-gray-300">Trung tâm tài chính, giải trí</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-3 text-gray-800 border border-gray-300 font-semibold">Yếu tố Bền vững</td>
+                                    <td class="p-3 text-gray-700 border border-gray-300">Nhấn mạnh (gần KSQ Rừng Sác)</td>
+                                    <td class="p-3 text-gray-700 border border-gray-300">Hạn chế</td>
+                                    <td class="p-3 text-gray-700 border border-gray-300">Tích hợp công nghệ xanh</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                     </div>
+                </div>
+                <div class="deep-analysis-tab-content hidden" id="phap-ly">
+                     <h4 class="text-2xl font-semibold mb-6 text-center text-gray-800">Các Mốc Pháp Lý Quan Trọng</h4>
+                     <ul class="space-y-4 max-w-2xl mx-auto">
+                        <li class="flex items-start">
+                            <div class="bg-green-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">✓</div>
+                            <div>
+                                <p class="font-semibold">Phê duyệt Điều chỉnh Quy hoạch chung TP.HCM</p>
+                                <p class="text-sm text-gray-600">Thủ tướng Chính phủ phê duyệt, tạo cơ sở cho việc phát triển các khu đô thị mới, bao gồm Cần Giờ.</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <div class="bg-green-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">✓</div>
+                            <div>
+                                <p class="font-semibold">Phê duyệt chủ trương đầu tư dự án</p>
+                                <p class="text-sm text-gray-600">UBND TP.HCM chấp thuận chủ trương, cho phép Vingroup tiến hành các bước chuẩn bị đầu tư tiếp theo.</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <div class="bg-blue-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">...</div>
+                            <div>
+                                <p class="font-semibold">Phê duyệt Quy hoạch chi tiết 1/500</p>
+                                <p class="text-sm text-gray-600">Đang trong quá trình hoàn thiện, là cơ sở pháp lý cao nhất để triển khai xây dựng chi tiết.</p>
+                            </div>
+                        </li>
+                     </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="ha-tang" class="py-16">
+             <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Hạ Tầng Kết Nối & Các Bên Liên Quan</h3>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Sự thành công của dự án phụ thuộc vào hệ thống hạ tầng đồng bộ và sự hài hòa lợi ích giữa các bên liên quan. Phần này phân tích hai yếu tố then chốt đó.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <h4 class="text-2xl font-semibold mb-4 text-gray-800">Dự án Hạ tầng Trọng điểm</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-start bg-gray-50 p-4 rounded-lg">
+                                <div class="text-3xl mr-4">🌉</div>
+                                <div>
+                                    <h5 class="font-bold">Cầu Cần Giờ</h5>
+                                    <p class="text-gray-600">Thay thế phà Bình Khánh, là tuyến kết nối huyết mạch, rút ngắn đáng kể thời gian di chuyển vào trung tâm TP.HCM.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start bg-gray-50 p-4 rounded-lg">
+                                <div class="text-3xl mr-4">🛣️</div>
+                                <div>
+                                    <h5 class="font-bold">Cao tốc Bến Lức - Long Thành</h5>
+                                    <p class="text-gray-600">Kết nối Cần Giờ với mạng lưới cao tốc quốc gia, mở ra liên kết vùng với Đồng bằng Sông Cửu Long và Đông Nam Bộ.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start bg-gray-50 p-4 rounded-lg">
+                                <div class="text-3xl mr-4">🚢</div>
+                                <div>
+                                    <h5 class="font-bold">Cảng biển nước sâu & Giao thông thủy</h5>
+                                    <p class="text-gray-600">Phát triển hệ thống cảng du lịch và vận tải thủy, khai thác lợi thế ven biển và kết nối quốc tế.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div>
+                        <h4 class="text-2xl font-semibold mb-4 text-gray-800">Sơ đồ các Bên liên quan</h4>
+                         <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex flex-col space-y-3">
+                                <div class="p-3 bg-blue-100 rounded text-center">
+                                    <p class="font-bold">Chính quyền</p>
+                                    <p class="text-sm">(Chính phủ, UBND TP.HCM)</p>
+                                </div>
+                                <div class="flex justify-around gap-3">
+                                    <div class="p-3 bg-emerald-100 rounded text-center flex-1">
+                                        <p class="font-bold">Nhà đầu tư</p>
+                                        <p class="text-sm">(Vingroup, NĐT thứ cấp)</p>
+                                    </div>
+                                    <div class="p-3 bg-orange-100 rounded text-center flex-1">
+                                        <p class="font-bold">Cộng đồng</p>
+                                        <p class="text-sm">(Dân cư địa phương, Chuyên gia)</p>
+                                    </div>
+                                </div>
+                                 <div class="flex justify-around gap-3">
+                                    <div class="p-3 bg-purple-100 rounded text-center flex-1">
+                                        <p class="font-bold">Tổ chức Xã hội</p>
+                                        <p class="text-sm">(Tổ chức môi trường, NGOs)</p>
+                                    </div>
+                                     <div class="p-3 bg-red-100 rounded text-center flex-1">
+                                        <p class="font-bold">Thị trường</p>
+                                        <p class="text-sm">(Khách du lịch, Khách hàng)</p>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="rui-ro" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Phân Tích Rủi Ro & Kịch Bản Mô Phỏng</h3>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Nhận diện và đánh giá các rủi ro tiềm ẩn, đồng thời phác thảo các kịch bản mô phỏng để lường trước những tác động trong tương lai.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h4 class="text-2xl font-semibold mb-4 text-gray-800">Ma Trận Rủi Ro</h4>
+                        <div class="grid grid-cols-4 gap-1 text-center text-xs font-semibold">
+                            <div class="p-2 self-end"><strong>Khả năng xảy ra</strong></div>
+                            <div class="p-2 bg-gray-200 rounded">Thấp</div>
+                            <div class="p-2 bg-gray-200 rounded">Trung bình</div>
+                            <div class="p-2 bg-gray-200 rounded">Cao</div>
+                            <div class="p-2 bg-gray-200 rounded self-center h-10 flex items-center justify-center">Cao</div>
+                            <div class="p-2 bg-yellow-300 rounded flex items-center justify-center min-h-[60px]">Rủi ro pháp lý</div>
+                            <div class="p-2 bg-red-400 rounded flex items-center justify-center min-h-[60px]">Tác động hệ sinh thái</div>
+                            <div class="p-2 bg-red-500 rounded flex items-center justify-center min-h-[60px]">Biến đổi khí hậu (Nước biển dâng)</div>
+                            <div class="p-2 bg-gray-200 rounded self-center h-10 flex items-center justify-center">Trung bình</div>
+                            <div class="p-2 bg-green-300 rounded flex items-center justify-center min-h-[60px]">Chậm tiến độ xây dựng</div>
+                            <div class="p-2 bg-yellow-400 rounded flex items-center justify-center min-h-[60px]">Biến động thị trường BĐS</div>
+                            <div class="p-2 bg-red-400 rounded flex items-center justify-center min-h-[60px]">Quá tải hạ tầng</div>
+                            <div class="p-2 bg-gray-200 rounded self-center h-10 flex items-center justify-center">Thấp</div>
+                            <div class="p-2 bg-green-200 rounded flex items-center justify-center min-h-[60px]">Rủi ro vận hành</div>
+                            <div class="p-2 bg-green-300 rounded flex items-center justify-center min-h-[60px]">Cạnh tranh từ các dự án khác</div>
+                             <div class="p-2 bg-yellow-300 rounded flex items-center justify-center min-h-[60px]">Xung đột xã hội</div>
+                        </div>
+                        <p class="text-sm mt-2 text-gray-500">*Trục ngang: Mức độ ảnh hưởng.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-semibold mb-4 text-gray-800">Kịch Bản Mô Phỏng</h4>
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h5 class="font-bold">Mô phỏng Giao thông</h5>
+                                <p class="text-gray-600">Dự báo lưu lượng xe khi dự án lấp đầy 50% và 100% dân số, kiểm tra khả năng đáp ứng của cầu Cần Giờ và các tuyến đường kết nối.</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h5 class="font-bold">Mô phỏng Tác động Thủy văn</h5>
+                                <p class="text-gray-600">Đánh giá sự thay đổi dòng chảy ven bờ, nguy cơ xói lở và ảnh hưởng tới hệ sinh thái rừng ngập mặn dưới các kịch bản phát triển khác nhau.</p>
+                            </div>
+                             <div class="bg-gray-50 p-4 rounded-lg">
+                                <h5 class="font-bold">Mô phỏng Kinh tế - Xã hội</h5>
+                                <p class="text-gray-600">Dự báo sự thay đổi về cơ cấu việc làm, thu nhập bình quân và nhu cầu về dịch vụ công (y tế, giáo dục) của huyện Cần Giờ trong 10-20 năm tới.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tien-do" class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Lộ Trình & Tiến Độ Dự Kiến</h3>
+                    <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Dự án được chia thành nhiều giai đoạn kéo dài trong nhiều năm. Dưới đây là lộ trình tổng quan các mốc quan trọng trong quá trình hình thành và phát triển của siêu đô thị.</p>
+                </div>
+                <div class="relative wrap overflow-hidden p-10 h-full">
+                    <div class="border-2-2 absolute border-opacity-20 border-gray-700 h-full border" style="left: 50%"></div>
+                    <div class="mb-8 flex justify-between items-center w-full right-timeline">
+                        <div class="order-1 w-5/12"></div>
+                        <div class="z-20 flex items-center order-1 bg-[#36755E] shadow-xl w-8 h-8 rounded-full">
+                            <h1 class="mx-auto font-semibold text-lg text-white">1</h1>
+                        </div>
+                        <div class="order-1 bg-gray-50 rounded-lg shadow-xl w-5/12 px-6 py-4">
+                            <h3 class="font-bold text-gray-800 text-xl">Giai đoạn Chuẩn bị</h3>
+                            <p class="text-sm leading-snug tracking-wide text-gray-600">Hoàn thiện pháp lý, phê duyệt quy hoạch 1/500, giải phóng mặt bằng.</p>
+                        </div>
+                    </div>
+                    <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
+                        <div class="order-1 w-5/12"></div>
+                        <div class="z-20 flex items-center order-1 bg-[#36755E] shadow-xl w-8 h-8 rounded-full">
+                             <h1 class="mx-auto font-semibold text-lg text-white">2</h1>
+                        </div>
+                        <div class="order-1 bg-emerald-50 rounded-lg shadow-xl w-5/12 px-6 py-4">
+                            <h3 class="font-bold text-gray-800 text-xl">Xây dựng Hạ tầng</h3>
+                            <p class="text-sm leading-snug tracking-wide text-gray-600">Xây dựng cầu Cần Giờ, san lấp, lấn biển, hệ thống giao thông và hạ tầng khung.</p>
+                        </div>
+                    </div>
+                    <div class="mb-8 flex justify-between items-center w-full right-timeline">
+                        <div class="order-1 w-5/12"></div>
+                        <div class="z-20 flex items-center order-1 bg-[#36755E] shadow-xl w-8 h-8 rounded-full">
+                            <h1 class="mx-auto font-semibold text-lg text-white">3</h1>
+                        </div>
+                        <div class="order-1 bg-gray-50 rounded-lg shadow-xl w-5/12 px-6 py-4">
+                            <h3 class="font-bold text-gray-800 text-xl">Phát triển Phân khu</h3>
+                            <p class="text-sm leading-snug tracking-wide text-gray-600">Triển khai xây dựng các phân khu chức năng theo từng giai đoạn cụ thể.</p>
+                        </div>
+                    </div>
+                     <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
+                        <div class="order-1 w-5/12"></div>
+                        <div class="z-20 flex items-center order-1 bg-[#36755E] shadow-xl w-8 h-8 rounded-full">
+                             <h1 class="mx-auto font-semibold text-lg text-white">4</h1>
+                        </div>
+                        <div class="order-1 bg-emerald-50 rounded-lg shadow-xl w-5/12 px-6 py-4">
+                            <h3 class="font-bold text-gray-800 text-xl">Hoàn thiện & Vận hành</h3>
+                            <p class="text-sm leading-snug tracking-wide text-gray-600">Đưa vào vận hành toàn bộ khu đô thị, thu hút dân cư và khách du lịch.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>Tổng hợp và phân tích bởi Vũ Trọng Khải - 0902 79 8800</p>
+            <p>&copy; 2025. Báo cáo phân tích được thực hiện cho mục đích tham khảo.</p>
+            <p class="text-sm text-gray-400 mt-2">Thông tin dựa trên các nguồn công khai và có thể thay đổi</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const FONT_COLOR = '#3D405B';
+            const BORDER_COLOR = 'rgba(61, 64, 91, 0.1)';
+
+            Chart.defaults.color = FONT_COLOR;
+            Chart.defaults.borderColor = BORDER_COLOR;
+            Chart.defaults.font.family = "'Be Vietnam Pro', sans-serif";
+
+            const landUseData = {
+                labels: ['Nhà ở, Đô thị', 'Công trình Công cộng', 'Cây xanh, Mặt nước', 'Giao thông', 'Du lịch, Dịch vụ'],
+                datasets: [{
+                    label: 'Phân Bổ Đất',
+                    data: [25, 15, 40, 10, 10],
+                    backgroundColor: ['#f1c40f', '#3498db', '#2ecc71', '#95a5a6', '#e67e22'],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+
+            const landUseCtx = document.getElementById('landUseChart').getContext('2d');
+            new Chart(landUseCtx, {
+                type: 'doughnut', data: landUseData,
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw}%` } } } }
+            });
+
+            const investmentData = {
+                labels: ['Vinhomes Cần Giờ', 'Sân bay Long Thành', 'Thủ Thiêm'],
+                datasets: [{
+                    label: 'Vốn Đầu Tư (tỷ USD)', data: [10, 16, 2.2],
+                    backgroundColor: ['#36755E', '#438970', '#5BA48A'],
+                    borderColor: ['#36755E', '#438970', '#5BA48A'],
+                    borderWidth: 1
+                }]
+            };
+
+            const investmentCtx = document.getElementById('investmentChart').getContext('2d');
+            new Chart(investmentCtx, {
+                type: 'bar', data: investmentData,
+                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, title: { display: true, text: 'Tỷ USD' } } } }
+            });
+
+            const swotData = {
+                labels: ['Điểm mạnh (Kinh tế)', 'Cơ hội (Xã hội)', 'Rủi ro (Môi trường)', 'Thách thức (Hạ tầng)', 'Tiềm năng (Du lịch)'],
+                datasets: [{
+                    label: 'Đánh giá tổng hợp', data: [8, 9, 6, 7, 10], fill: true,
+                    backgroundColor: 'rgba(54, 117, 94, 0.2)', borderColor: '#36755E',
+                    pointBackgroundColor: '#36755E', pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff', pointHoverBorderColor: '#36755E'
+                }]
+            };
+
+            const swotCtx = document.getElementById('swotChart').getContext('2d');
+            new Chart(swotCtx, {
+                type: 'radar', data: swotData,
+                options: { responsive: true, maintainAspectRatio: false, scales: { r: { angleLines: { color: BORDER_COLOR }, grid: { color: BORDER_COLOR }, pointLabels: { font: { size: 12 } }, suggestedMin: 0, suggestedMax: 10 } }, plugins: { legend: { display: false } } }
+            });
+
+            const capitalCtx = document.getElementById('capitalStructureChart').getContext('2d');
+            new Chart(capitalCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Vốn Chủ sở hữu', 'Vốn Vay & Huy động'],
+                    datasets: [{ data: [40, 60], backgroundColor: ['#36755E', '#95a5a6'], borderColor: '#FFFFFF', borderWidth: 2 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw}%` } } } }
+            });
+
+            function setupTabSystem(buttonClass, contentClass) {
+                const tabs = document.querySelectorAll(buttonClass);
+                const tabContents = document.querySelectorAll(contentClass);
+                if (tabs.length === 0) return;
+                
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(item => item.classList.remove('active'));
+                        tab.classList.add('active');
+
+                        const targetId = tab.dataset.tab;
+                        const target = document.getElementById(targetId);
+                        
+                        tabContents.forEach(content => content.classList.add('hidden'));
+                        
+                        if (target) {
+                            target.classList.remove('hidden');
+                        } else {
+                            console.error('Không tìm thấy nội dung cho tab:', targetId);
+                        }
+                    });
+                });
+            }
+
+            setupTabSystem('.tab-button', '.tab-content');
+            setupTabSystem('.deep-analysis-tab-button', '.deep-analysis-tab-content');
+
+            const zoneDetailsData = {
+                a: { title: 'Phân khu A: Du lịch & Nghỉ dưỡng', description: 'Tập trung phát triển các sản phẩm du lịch cao cấp, văn hóa và giải trí, là cửa ngõ đón khách du lịch.', amenities: ['Công viên chuyên đề (Theme Park)', 'Sân golf', 'Bến du thuyền', 'Khách sạn 5 sao và resort', 'Trung tâm biểu diễn nghệ thuật'] },
+                b: { title: 'Phân khu B: Đô thị Dịch vụ', description: 'Là trái tim của khu đô thị với các khu nhà ở, biệt thự, căn hộ và các dịch vụ công cộng thiết yếu.', amenities: ['Khu dân cư cao cấp', 'Trường học liên cấp quốc tế', 'Bệnh viện đa khoa quốc tế', 'Trung tâm thương mại', 'Công viên trung tâm'] },
+                c: { title: 'Phân khu C: Trung tâm Tài chính', description: 'Định hướng trở thành một trung tâm kinh tế, tài chính mới của khu vực với các tòa nhà văn phòng, trung tâm hội nghị.', amenities: ['Tòa nhà văn phòng hạng A', 'Trung tâm hội nghị quốc tế', 'Sàn giao dịch tài chính', 'Khách sạn thương mại'] },
+                d: { title: 'Phân khu D: Đô thị Sáng tạo', description: 'Khu vực dành cho nghiên cứu, phát triển công nghệ cao, thu hút các chuyên gia và công ty công nghệ.', amenities: ['Trung tâm R&D', 'Khu công nghệ phần mềm', 'Đại học công nghệ', 'Không gian làm việc chung (Co-working)'] },
+                e: { title: 'Phân khu E: Giáo dục & Y tế', description: 'Tập trung vào các cơ sở giáo dục và y tế chất lượng cao, phục vụ không chỉ cư dân mà còn cả khu vực.', amenities: ['Làng đại học', 'Bệnh viện chuyên khoa', 'Viện dưỡng lão', 'Trung tâm nghiên cứu y sinh'] },
+                f: { title: 'Không gian Biển', description: 'Khai thác tối đa lợi thế biển với bãi tắm công cộng, quảng trường biển và các hoạt động thể thao dưới nước.', amenities: ['Bãi biển nhân tạo và tự nhiên', 'Quảng trường biển', 'Đường dạo bộ ven biển', 'Khu thể thao dưới nước'] }
+            };
+            
+            const zonesContainer = document.getElementById('zones-container');
+            const zoneTitle = document.getElementById('zone-title');
+            const zoneDescription = document.getElementById('zone-description');
+            const zoneAmenities = document.getElementById('zone-amenities');
+            const allZones = document.querySelectorAll('.zone');
+
+            zonesContainer.addEventListener('click', (e) => {
+                const zoneEl = e.target.closest('.zone');
+                if (zoneEl) {
+                    const zoneId = zoneEl.dataset.zone;
+                    const data = zoneDetailsData[zoneId];
+                    allZones.forEach(z => z.classList.remove('active'));
+                    zoneEl.classList.add('active');
+                    if (data) {
+                        zoneTitle.textContent = data.title;
+                        zoneDescription.textContent = data.description;
+                        zoneAmenities.innerHTML = data.amenities.map(item => `<li>${item}</li>`).join('');
+                    }
+                }
+            });
+
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.addEventListener('change', () => {
+                const targetId = mobileNav.value;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            
+            const sections = document.querySelectorAll('main section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = { root: null, rootMargin: '-40% 0px -60% 0px', threshold: 0 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                        });
+                        if (mobileNav.value !== `#${id}`) {
+                           mobileNav.value = `#${id}`;
+                        }
+                    }
+                });
+            }, observerOptions);
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+</html>
+
